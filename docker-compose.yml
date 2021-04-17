@@ -1,0 +1,63 @@
+version: "2.1"
+
+# Be sure to set these environment variables:
+#  - INFLUXDB_ADMIN_USER
+#  - INFLUXDB_ADMIN_PASSWORD
+#  - INFLUXDB_DB
+#  - INFLUXDB_USER
+#  - INFLUXDB_USER_PASSWORD
+
+services:
+  influxdb:
+    build: ./influxdb
+    restart: on-failure
+    ports:
+      - "8086:8086"
+    networks:
+      - frontend
+      - backend
+    volumes:
+        - 'influxdb-data:/var/lib/influxdb'
+    container_name: influxdb
+  prometheus:
+    build: ./prometheus
+    ports:
+      - "9090:9090"
+      - "9100:9100"
+    networks:
+      - frontend
+      - backend
+    volumes:
+      - 'prometheus-data:/data'
+    depends_on: 
+      - node_exporter
+    container_name: prometheus
+  grafana:
+    build: ./grafana
+    restart: on-failure
+    ports: 
+      - "80:3000"
+    networks:
+        - frontend
+        - backend
+    volumes:
+        - grafana_etc:/etc/grafana
+        - grafana_usr:/usr/share/grafana 
+        - grafana_var:/var/lib/grafana
+    container_name: grafana
+  node_exporter:
+    build: ./node_exporter
+    networks:
+        - backend
+    container_name: node_exporter
+
+networks:
+    frontend:
+    backend:
+
+volumes:
+    prometheus-data:
+    influxdb-data:
+    grafana_etc:
+    grafana_usr:
+    grafana_var:
