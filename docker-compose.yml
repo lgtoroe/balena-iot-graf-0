@@ -44,6 +44,8 @@ services:
         - grafana_etc:/etc/grafana
         - grafana_usr:/usr/share/grafana 
         - grafana_var:/var/lib/grafana
+    depends_on:
+      - influxdb
     container_name: grafana
   node_exporter:
     build: ./node_exporter

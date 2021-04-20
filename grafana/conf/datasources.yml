@@ -10,3 +10,13 @@ datasources:
   editable: true
   jsonData:
     timeInterval: '10s'
+- name: 'InfluxDB'
+  type: influxdb
+  access: proxy
+  url: http://influxdb:8086
+  database: ${INFLUXDB_DB}
+  basicAuth: true
+  basicAuthUser: ${INFLUXDB_USER}
+  basicAuthPassword: ${INFLUXDB_USER_PASSWORD}
+  jsonData:
+  tlsSkipVerify: true
